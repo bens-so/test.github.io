@@ -1,0 +1,3 @@
+Codex normal download control test
+This benign text file is served as a static resource and downloaded through a normal anchor link.
+No Blob, atob, object URL, or programmatic reconstruction is used for this file.
