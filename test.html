@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML Smuggling Download Control Test</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    body {
+      margin: 2rem;
+      max-width: 900px;
+    }
+
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95em;
+    }
+
+    pre {
+      border: 1px solid #9995;
+      border-radius: 6px;
+      overflow: auto;
+      padding: 1rem;
+      white-space: pre-wrap;
+    }
+
+    button {
+      font: inherit;
+      padding: 0.55rem 0.8rem;
+    }
+
+    .status {
+      border-left: 4px solid #888;
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+    }
+
+    .ok {
+      border-color: #12805c;
+    }
+
+    .fail {
+      border-color: #b42318;
+    }
+  </style>
+</head>
+<body>
+  <h1>HTML Smuggling Download Control Test</h1>
+
+  <p>
+    This page reconstructs a benign text file from a base64 string with
+    <code>atob()</code>, wraps it in a <code>Blob</code>, and attempts to start
+    a download automatically when the page loads.
+  </p>
+
+  <div id="status" class="status">Waiting for page load...</div>
+
+  <dl>
+    <dt>Download filename</dt>
+    <dd><code id="filename"></code></dd>
+    <dt>MIME type</dt>
+    <dd><code id="mime"></code></dd>
+  </dl>
+
+  <button id="manual" type="button">Try Manual Download</button>
+  <button id="pathLike" type="button">Try Path-Like Filename</button>
+  <button id="savePicker" type="button">Try Save Picker</button>
+
+  <h2>Decoded Payload Preview</h2>
+  <pre id="preview"></pre>
+
+  <script>
+    "use strict";
+
+    const DOWNLOAD_NAME = "codex-html-smuggling-benign-test.txt";
+    const PATH_LIKE_DOWNLOAD_NAME = "../codex-specific-location-attempt.txt";
+    const MIME_TYPE = "text/plain;charset=utf-8";
+
+    const payloadText = [
+      "Codex HTML smuggling control test",
+      "This is a benign text payload.",
+      `Generated at: ${new Date().toISOString()}`,
+      "",
+    ].join("\n");
+
+    const base64Payload = btoa(payloadText);
+
+    const statusEl = document.getElementById("status");
+    const previewEl = document.getElementById("preview");
+    const manualButton = document.getElementById("manual");
+    const pathLikeButton = document.getElementById("pathLike");
+    const savePickerButton = document.getElementById("savePicker");
+
+    document.getElementById("filename").textContent = DOWNLOAD_NAME;
+    document.getElementById("mime").textContent = MIME_TYPE;
+
+    function setStatus(kind, text) {
+      statusEl.className = `status ${kind}`;
+      statusEl.textContent = text;
+    }
+
+    function decodeBase64ToBytes(base64) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+
+      return bytes;
+    }
+
+    function makeBlob() {
+      const bytes = decodeBase64ToBytes(base64Payload);
+      return new Blob([bytes], { type: MIME_TYPE });
+    }
+
+    function startDownload(reason, downloadName = DOWNLOAD_NAME) {
+      const blob = makeBlob();
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = objectUrl;
+      link.download = downloadName;
+      link.rel = "noopener";
+      link.style.display = "none";
+      document.body.appendChild(link);
+
+      try {
+        link.click();
+        setStatus("ok", `Attempted ${reason} download. Check whether the browser or policy blocked it.`);
+      } catch (error) {
+        setStatus("fail", `Download attempt threw: ${error && error.message ? error.message : error}`);
+      } finally {
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
+      }
+    }
+
+    async function trySavePicker() {
+      if (!window.showSaveFilePicker) {
+        setStatus("fail", "showSaveFilePicker is unavailable in this browser context.");
+        return;
+      }
+
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: DOWNLOAD_NAME,
+          types: [{
+            description: "Text file",
+            accept: { "text/plain": [".txt"] },
+          }],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(makeBlob());
+        await writable.close();
+        setStatus("ok", "Save picker completed after user-selected destination.");
+      } catch (error) {
+        setStatus("fail", `Save picker did not complete: ${error && error.message ? error.message : error}`);
+      }
+    }
+
+    previewEl.textContent = atob(base64Payload);
+    manualButton.addEventListener("click", () => startDownload("manual"));
+    pathLikeButton.addEventListener("click", () => startDownload("path-like filename", PATH_LIKE_DOWNLOAD_NAME));
+    savePickerButton.addEventListener("click", trySavePicker);
+
+    window.addEventListener("load", () => {
+      setStatus("ok", "Page loaded. Attempting automatic download...");
+      setTimeout(() => startDownload("automatic"), 250);
+    });
+  </script>
+</body>
+</html>
