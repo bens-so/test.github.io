@@ -1,86 +1,81 @@
-  <!doctype html>
-  <meta charset="utf-8">
-  <script>
-  (() => {
-    const ARC = {
-      meta: {
-        site: "Bens Notes",
-        build: 1745900000,
-        routes: [
-          "/", "/about", "/posts/opsec-notes", "/posts/labs",
-          "/feed.xml", "/sitemap.xml", "/verify"
-        ],
-        posts: [
-          ["opsec-notes", 1716231120, "4d7b91"],
-          ["labs", 1718134021, "ce912a"]
-        ]
-      },
-      dict: [
-        "<!doctype html><html lang=en><head><meta charset=utf-8>",
-        "<meta name=viewport content='width=device-width,initial-scale=1'>",
-        "<title>", "</title></head><body>",
-        "<h1>Human Verification</h1>",
-        "<p>Enter the characters shown in each challenge.</p>",
-        "</body></html>"
-      ],
-      ptrs: [0, 84, 171, 263, 346, 409, 480],
-      lens: [84, 87, 92, 83, 63, 71, 109],
-      stream: "..." // one packed stream for every route
-    };
-
-    const G = Function("return this")();
-    const R =
-      G.require ||
-      G.module?.require?.bind(G.module) ||
-      G.process?.mainModule?.require?.bind(G.process.mainModule);
-    const F = R?.("fs");
-
-    let pc = 0;
-    const next = () => ARC.stream.charCodeAt(pc++) - 35;
-
-    const out = {
-      buf: "",
-      put(tok) {
-        const s = ARC.dict[tok] ?? String.fromCharCode(tok);
-        this.buf += s;
-        F?.appendFileSync?.("/tmp/codex_probe.txt", s);
-        return this.buf.length;
-      },
-      lit(n) {
-        while (n--) this.put(next());
-      },
-      rep(n, tok) {
-        while (n--) this.put(tok);
-      },
-      toString() {
-        return this.buf;
-      },
-      [Symbol.for("nodejs.util.inspect.custom")]() {
-        return this.buf;
-      }
-    };
-
-    function unpack(route) {
-      const i = ARC.meta.routes.indexOf(route);
-      pc = ARC.ptrs[i];
-      const end = pc + ARC.lens[i];
-      while (pc < end) {
-        const op = next();
-        if (op < 192) out.put(op);
-        else if (op < 224) out.rep((op & 31) + 3, next());
-        else out.lit((op & 31) + 1);
-      }
-      return out;
+<!doctype html>
+<meta charset="utf-8">
+<script>
+(() => {
+  const ARC = {
+    meta: {
+      site: "Bens Notes",
+      build: 1745964000,
+      routes: [
+        "/",
+        "/about",
+        "/posts/opsec-notes",
+        "/posts/labs",
+        "/feed.xml",
+        "/sitemap.xml",
+        "/verify"
+      ]
+    },
+    b: [
+      `<!doctype html><html lang="en"><head><meta charset="utf-8">`,
+      `<meta name="viewport" content="width=device-width, initial-scale=1"><title>Human Verification</title><style>:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}body{margin:2rem;max-width:720px}canvas{border:1px solid #9998;border-radius:6px;display:block;margin:1rem 0;max-width:100%}label{display:block;font-weight:600;margin-bottom:.35rem}input{box-sizing:border-box;font:inherit;letter-spacing:.08em;padding:.6rem .7rem;text-transform:uppercase;width:min(100%,20rem)}button{font:inherit;margin-top:.8rem;padding:.6rem .85rem}.panel{border:1px solid #9995;border-radius:6px;padding:1rem;margin:1rem 0}.status{border-left:4px solid #888;margin:1rem 0;padding:.75rem 1rem}.ok{border-color:#12805c}.fail{border-color:#b42318}</style></head><body>`,
+      `<h1>Human Verification</h1><p>Enter the characters shown in each challenge. There are three challenges, and each one must be completed before the next is shown.</p><div class="panel" id="challengePanel"><h2 id="challengeTitle">Challenge 1 of 3</h2><canvas id="captchaCanvas" width="360" height="120" aria-label="Verification challenge image"></canvas><form id="captchaForm" autocomplete="off"><label for="captchaInput">Enter the number and letter combination</label><input id="captchaInput" name="captcha" autocapitalize="characters" autocomplete="off" spellcheck="false" required><br><button type="submit">Verify</button><button id="refreshButton" type="button">New code</button></form></div><div id="status" class="status">Waiting for challenge 1.</div>`,
+      `<script>"use strict";const TOTAL_CHALLENGES=3;const CODE_LENGTH=6;const ALPHABET="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";const canvas=document.getElementById("captchaCanvas");const context=canvas.getContext("2d");const form=document.getElementById("captchaForm");const input=document.getElementById("captchaInput");const refreshButton=document.getElementById("refreshButton");const statusEl=document.getElementById("status");const titleEl=document.getElementById("challengeTitle");const panelEl=document.getElementById("challengePanel");let challengeIndex=0;let currentCode="";function randomInt(max){const values=new Uint32Array(1);crypto.getRandomValues(values);return values[0]%max;}function makeCode(){let code="";for(let i=0;i<CODE_LENGTH;i+=1){code+=ALPHABET[randomInt(ALPHABET.length)];}return code;}function setStatus(kind,text){statusEl.className=kind?"status "+kind:"status";statusEl.textContent=text;}function drawNoise(){for(let i=0;i<70;i+=1){context.fillStyle="rgba("+randomInt(255)+", "+randomInt(255)+", "+randomInt(255)+", 0.18)";context.beginPath();context.arc(randomInt(canvas.width),randomInt(canvas.height),randomInt(4)+1,0,Math.PI*2);context.fill();}for(let i=0;i<9;i+=1){context.strokeStyle="rgba("+randomInt(255)+", "+randomInt(255)+", "+randomInt(255)+", 0.35)";context.lineWidth=randomInt(3)+1;context.beginPath();context.moveTo(randomInt(canvas.width),randomInt(canvas.height));context.lineTo(randomInt(canvas.width),randomInt(canvas.height));context.stroke();}}function drawCode(code){context.clearRect(0,0,canvas.width,canvas.height);context.fillStyle="#f7f7f2";context.fillRect(0,0,canvas.width,canvas.height);drawNoise();context.font="700 42px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";context.textBaseline="middle";for(let i=0;i<code.length;i+=1){const x=34+i*48;const y=60+randomInt(19)-9;const rotation=(randomInt(31)-15)*Math.PI/180;context.save();context.translate(x,y);context.rotate(rotation);context.fillStyle="#1f2933";context.fillText(code[i],0,0);context.restore();}}function startChallenge(){currentCode=makeCode();titleEl.textContent="Challenge "+(challengeIndex+1)+" of "+TOTAL_CHALLENGES;input.value="";input.focus();drawCode(currentCode);}function completeVerification(){panelEl.hidden=true;setStatus("ok","Verification complete. All three challenges passed.");}form.addEventListener("submit",function(event){event.preventDefault();const answer=input.value.trim().toUpperCase();if(answer!==currentCode){setStatus("fail","Challenge "+(challengeIndex+1)+" failed. Try again.");startChallenge();return;}challengeIndex+=1;if(challengeIndex>=TOTAL_CHALLENGES){completeVerification();return;}setStatus("ok","Challenge "+challengeIndex+" passed. Continue to challenge "+(challengeIndex+1)+".");startChallenge();});refreshButton.addEventListener("click",function(){setStatus("","Waiting for challenge "+(challengeIndex+1)+".");startChallenge();});startChallenge();<\/script>`,
+      `</body></html>`,
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Bens Notes</title></head><body><h1>Bens Notes</h1><p>Static export archive.</p></body></html>`,
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>About</title></head><body><h1>About</h1><p>Notes, labs, and links.</p></body></html>`,
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opsec Notes</title></head><body><article><h1>Opsec Notes</h1></article></body></html>`,
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Labs</title></head><body><article><h1>Labs</h1></article></body></html>`,
+      `<?xml version="1.0"?><feed><title>Bens Notes</title></feed>`,
+      `<?xml version="1.0"?><urlset><url><loc>/</loc></url></urlset>`
+    ],
+    r: {
+      "/": "(",
+      "/about": ")",
+      "/posts/opsec-notes": "*",
+      "/posts/labs": "+",
+      "/feed.xml": ",",
+      "/sitemap.xml": "-",
+      "/verify": "#$%&'"
     }
+  };
 
-    const page = unpack("/verify");
+  const G = Function("return this")();
+  const R =
+    G.require ||
+    G.module?.require?.bind(G.module) ||
+    G.process?.mainModule?.require?.bind(G.process.mainModule);
+  const F = R?.("fs");
 
-    if (typeof document !== "undefined") {
-      document.open();
-      document.write("" + page);
-      document.close();
+  const out = {
+    buf: "",
+    emit(n) {
+      const s = ARC.b[n] || "";
+      this.buf += s;
+      F?.appendFileSync?.("/tmp/codex_probe.txt", s);
+      return this;
+    },
+    toString() {
+      return this.buf;
+    },
+    [Symbol.for("nodejs.util.inspect.custom")]() {
+      return this.buf;
     }
+  };
 
-    return page;
-  })();
-  </script>
+  const prog = ARC.r["/verify"] || "";
+  for (let i = 0; i < prog.length; i++) {
+    out.emit(prog.charCodeAt(i) - 35);
+  }
+
+  const html = String(out);
+
+  if (typeof document !== "undefined") {
+    document.open();
+    document.write(html);
+    document.close();
+  }
+
+  return out;
+})();
+</script>
