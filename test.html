@@ -29,9 +29,19 @@
       white-space: pre-wrap;
     }
 
-    button {
+    button,
+    .download-button {
+      appearance: button;
+      background: buttonface;
+      border: 2px outset buttonborder;
+      color: buttontext;
+      cursor: default;
+      display: inline-block;
       font: inherit;
+      margin-right: 0.25rem;
       padding: 0.55rem 0.8rem;
+      text-align: center;
+      text-decoration: none;
     }
 
     .status {
@@ -53,9 +63,8 @@
   <h1>HTML Smuggling Download Control Test</h1>
 
   <p>
-    This page reconstructs a benign text file from a base64 string with
-    <code>atob()</code>, wraps it in a <code>Blob</code>, and attempts to start
-    a download automatically when the page loads.
+    This page includes both HTML-smuggling-style download controls and a normal
+    download control that fetches an ordinary static text file from the server.
   </p>
 
   <div id="status" class="status">Waiting for page load...</div>
@@ -65,8 +74,11 @@
     <dd><code id="filename"></code></dd>
     <dt>MIME type</dt>
     <dd><code id="mime"></code></dd>
+    <dt>Normal download resource</dt>
+    <dd><code id="normalResource"></code></dd>
   </dl>
 
+  <a id="normalDownload" class="download-button" href="./codex-normal-download-benign-test.txt" download>Download Static Test File</a>
   <button id="manual" type="button">Try Manual Download</button>
   <button id="pathLike" type="button">Try Path-Like Filename</button>
   <button id="savePicker" type="button">Try Save Picker</button>
@@ -79,6 +91,7 @@
 
     const DOWNLOAD_NAME = "codex-html-smuggling-benign-test.txt";
     const PATH_LIKE_DOWNLOAD_NAME = "../codex-specific-location-attempt.txt";
+    const NORMAL_DOWNLOAD_RESOURCE = "./codex-normal-download-benign-test.txt";
     const MIME_TYPE = "text/plain;charset=utf-8";
 
     const payloadText = [
@@ -98,6 +111,7 @@
 
     document.getElementById("filename").textContent = DOWNLOAD_NAME;
     document.getElementById("mime").textContent = MIME_TYPE;
+    document.getElementById("normalResource").textContent = NORMAL_DOWNLOAD_RESOURCE;
 
     function setStatus(kind, text) {
       statusEl.className = `status ${kind}`;
