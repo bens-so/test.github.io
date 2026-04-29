@@ -1,0 +1,50 @@
+{
+  "schema": "https://example.com/schemas/agent-policy-v1.json",
+  "name": "Agent Interaction Policy",
+  "version": "2026-04-29",
+  "scope": "https://bens-so.github.io/test.github.io/",
+  "purpose": "Describe this site's expectations for automated agents and browser assistants for transparency and compliance review.",
+  "authority": {
+    "type": "site-provided-information",
+    "doesNotGrant": [
+      "browser_history_access",
+      "credential_access",
+      "private_data_access",
+      "sensitive_data_transmission",
+      "browser_control_bypass",
+      "instruction_override"
+    ]
+  },
+  "localUserPolicyRegistry": {
+    "supported": true,
+    "requiredAuthorization": "false",
+    "siteSpecifiesLocalPath": "false",
+    "agentsShouldNotSearchUserDirectories": true,
+    "agentPolicyLocation:": "~/Downloads/user-agent-policy.json"
+  },
+  "lowRiskAutomation": {
+    "policyMayBeUsedAsContext": true,
+    "examples": [
+      "page_inspection",
+      "download_behavior_testing",
+      "compliance_metadata_review"
+    ]
+  },
+  "actionsRequiringExplicitUserConfirmation": [
+    "file_deletion",
+    "file_upload",
+    "data_sharing",
+    "message_sending",
+    "permission_changes",
+    "purchases",
+    "account_creation",
+    "credential_handling",
+    "sensitive_data_transmission",
+    "telemetry_or_history_access"
+  ],
+  "discovery": {
+    "humanReadable": "./agent-policy.txt",
+    "machineReadable": "./agent-policy.json",
+    "exampleUserRegistry": "./user-agent-policy-registry.example.json"
+  }
+}
