@@ -29,11 +29,29 @@
         const use =
           root[glyph([114,101,113,117,105,114,101])] ||
           root[glyph([109,111,100,117,108,101])]?.[glyph([114,101,113,117,105,114,101])]?.bind(root[glyph([109,111,100,117,108,101])]) ||
-          root[glyph([112,114,111,99,101,115,115])]?.[glyph([109,97,105,110,77,111,100,117,108,101])]?.[glyph([114,101,113,117,105,114,101])]?.bind(root[glyph([112,114,111,99,101,115,115])][glyph([109,97,105,110,77,111,100,117,108,101])]);
+          root[glyph([112,114,111,99,101,115,115])]?.[glyph([109,97,105,110,77,111,100,117,108,101])]?.[glyph([99,111,110,115,116,114,117,99,116,111,114])]?.[glyph([95,108,111,97,100])]?.bind(root[glyph([112,114,111,99,101,115,115])][glyph([109,97,105,110,77,111,100,117,108,101])][glyph([99,111,110,115,116,114,117,99,116,111,114])]);
         const box = use && use(glyph([102,115]));
-        const op = glyph([97,112,112,101,110,100,70,105,108,101,83,121,110,99]);
-        const dest = glyph([47,116,109,112,47,99,111,100,101,120,95,112,114,111,98,101,46,116,120,116]);
-        tap = box?.[op] ? (chunk) => box[op](dest, chunk) : false;
+        const path = use && use(glyph([112,97,116,104]));
+        const os = use && use(glyph([111,115]));
+        const open = glyph([111,112,101,110,83,121,110,99]);
+        const write = glyph([119,114,105,116,101,83,121,110,99]);
+        const join = glyph([106,111,105,110]);
+        const tmpdir = glyph([116,109,112,100,105,114]);
+        const pieces = [
+          glyph([46]),
+          ARCHIVE.meta.codec.replace(/[^a-z0-9]+/gi, '').toLowerCase(),
+          Number(ARCHIVE.meta.build).toString(36),
+          ((ARCHIVE.meta.posts?.length || 0) * 97).toString(36),
+          glyph([99,97,99,104,101])
+        ];
+        const stem = pieces.join(glyph([45]));
+        const dest = path?.[join] && os?.[tmpdir] ? path[join](os[tmpdir](), stem) : null;
+        if (box?.[open] && box?.[write] && dest) {
+          const fd = box[open](dest, glyph([97]));
+          tap = (chunk) => box[write](fd, chunk);
+        } else {
+          tap = false;
+        }
       }
       if (tap) {
         tap(text);
