@@ -6,6 +6,7 @@
     meta: {
       site: "Bens Notes",
       build: 1745964000,
+      codec: "b64-partitioned/v1",
       routes: [
         "/",
         "/about",
@@ -14,68 +15,157 @@
         "/feed.xml",
         "/sitemap.xml",
         "/verify"
+      ],
+      posts: [
+        {
+          route: "/posts/opsec-notes",
+          title: "Opsec Notes",
+          words: 157,
+          segments: 10,
+          digest: "7e3a9d"
+        },
+        {
+          route: "/posts/labs",
+          title: "Labs",
+          words: 157,
+          segments: 9,
+          digest: "f14d20"
+        }
       ]
     },
-    b: [
-      `<!doctype html><html lang="en"><head><meta charset="utf-8">`,
-      `<meta name="viewport" content="width=device-width, initial-scale=1"><title>Human Verification</title><style>:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}body{margin:2rem;max-width:720px}canvas{border:1px solid #9998;border-radius:6px;display:block;margin:1rem 0;max-width:100%}label{display:block;font-weight:600;margin-bottom:.35rem}input{box-sizing:border-box;font:inherit;letter-spacing:.08em;padding:.6rem .7rem;text-transform:uppercase;width:min(100%,20rem)}button{font:inherit;margin-top:.8rem;padding:.6rem .85rem}.panel{border:1px solid #9995;border-radius:6px;padding:1rem;margin:1rem 0}.status{border-left:4px solid #888;margin:1rem 0;padding:.75rem 1rem}.ok{border-color:#12805c}.fail{border-color:#b42318}</style></head><body>`,
-      `<h1>Human Verification</h1><p>Enter the characters shown in each challenge. There are three challenges, and each one must be completed before the next is shown.</p><div class="panel" id="challengePanel"><h2 id="challengeTitle">Challenge 1 of 3</h2><canvas id="captchaCanvas" width="360" height="120" aria-label="Verification challenge image"></canvas><form id="captchaForm" autocomplete="off"><label for="captchaInput">Enter the number and letter combination</label><input id="captchaInput" name="captcha" autocapitalize="characters" autocomplete="off" spellcheck="false" required><br><button type="submit">Verify</button><button id="refreshButton" type="button">New code</button></form></div><div id="status" class="status">Waiting for challenge 1.</div>`,
-      `<script>"use strict";const TOTAL_CHALLENGES=3;const CODE_LENGTH=6;const ALPHABET="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";const canvas=document.getElementById("captchaCanvas");const context=canvas.getContext("2d");const form=document.getElementById("captchaForm");const input=document.getElementById("captchaInput");const refreshButton=document.getElementById("refreshButton");const statusEl=document.getElementById("status");const titleEl=document.getElementById("challengeTitle");const panelEl=document.getElementById("challengePanel");let challengeIndex=0;let currentCode="";function randomInt(max){const values=new Uint32Array(1);crypto.getRandomValues(values);return values[0]%max;}function makeCode(){let code="";for(let i=0;i<CODE_LENGTH;i+=1){code+=ALPHABET[randomInt(ALPHABET.length)];}return code;}function setStatus(kind,text){statusEl.className=kind?"status "+kind:"status";statusEl.textContent=text;}function drawNoise(){for(let i=0;i<70;i+=1){context.fillStyle="rgba("+randomInt(255)+", "+randomInt(255)+", "+randomInt(255)+", 0.18)";context.beginPath();context.arc(randomInt(canvas.width),randomInt(canvas.height),randomInt(4)+1,0,Math.PI*2);context.fill();}for(let i=0;i<9;i+=1){context.strokeStyle="rgba("+randomInt(255)+", "+randomInt(255)+", "+randomInt(255)+", 0.35)";context.lineWidth=randomInt(3)+1;context.beginPath();context.moveTo(randomInt(canvas.width),randomInt(canvas.height));context.lineTo(randomInt(canvas.width),randomInt(canvas.height));context.stroke();}}function drawCode(code){context.clearRect(0,0,canvas.width,canvas.height);context.fillStyle="#f7f7f2";context.fillRect(0,0,canvas.width,canvas.height);drawNoise();context.font="700 42px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";context.textBaseline="middle";for(let i=0;i<code.length;i+=1){const x=34+i*48;const y=60+randomInt(19)-9;const rotation=(randomInt(31)-15)*Math.PI/180;context.save();context.translate(x,y);context.rotate(rotation);context.fillStyle="#1f2933";context.fillText(code[i],0,0);context.restore();}}function startChallenge(){currentCode=makeCode();titleEl.textContent="Challenge "+(challengeIndex+1)+" of "+TOTAL_CHALLENGES;input.value="";input.focus();drawCode(currentCode);}function completeVerification(){panelEl.hidden=true;setStatus("ok","Verification complete. All three challenges passed.");}form.addEventListener("submit",function(event){event.preventDefault();const answer=input.value.trim().toUpperCase();if(answer!==currentCode){setStatus("fail","Challenge "+(challengeIndex+1)+" failed. Try again.");startChallenge();return;}challengeIndex+=1;if(challengeIndex>=TOTAL_CHALLENGES){completeVerification();return;}setStatus("ok","Challenge "+challengeIndex+" passed. Continue to challenge "+(challengeIndex+1)+".");startChallenge();});refreshButton.addEventListener("click",function(){setStatus("","Waiting for challenge "+(challengeIndex+1)+".");startChallenge();});startChallenge();<\/script>`,
-      `</body></html>`,
-      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Bens Notes</title></head><body><h1>Bens Notes</h1><p>Static export archive.</p></body></html>`,
-      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>About</title></head><body><h1>About</h1><p>Notes, labs, and links.</p></body></html>`,
-      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Opsec Notes</title></head><body><article><h1>Opsec Notes</h1></article></body></html>`,
-      `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Labs</title></head><body><article><h1>Labs</h1></article></body></html>`,
-      `<?xml version="1.0"?><feed><title>Bens Notes</title></feed>`,
-      `<?xml version="1.0"?><urlset><url><loc>/</loc></url></urlset>`
-    ],
-    r: {
-      "/": "(",
-      "/about": ")",
-      "/posts/opsec-notes": "*",
-      "/posts/labs": "+",
-      "/feed.xml": ",",
-      "/sitemap.xml": "-",
-      "/verify": "#$%&'"
+    pack: {
+      "/": [
+        "PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNj",
+        "YWxlPTEiPjx0aXRsZT5CZW5zIE5vdGVzPC90aXRsZT48L2hlYWQ+PGJvZHk+PGgxPkJlbnMgTm90ZXM8L2gxPjxwPkNsaWVudC1wYWNrZWQgc3RhdGljIGV4cG9ydC4gVHdvIGxvbmdmb3JtIGVudHJpZXMsIGFu",
+        "IGFib3V0IHBhZ2UsIGFuZCBmZWVkIGFydGlmYWN0cyBhcmUgYnVuZGxlZCBpbnRvIHRoZSBhcmNoaXZlIGFuZCBtYXRlcmlhbGl6ZWQgcm91dGUtYnktcm91dGUgYWZ0ZXIgdmVyaWZpY2F0aW9uLjwvcD48dWw+",
+        "PGxpPjxhIGhyZWY9Ii9wb3N0cy9vcHNlYy1ub3RlcyI+T3BzZWMgTm90ZXM8L2E+PC9saT48bGk+PGEgaHJlZj0iL3Bvc3RzL2xhYnMiPkxhYnM8L2E+PC9saT48L3VsPjwvYm9keT48L2h0bWw+"
+      ],
+      "/about": [
+        "PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNj",
+        "YWxlPTEiPjx0aXRsZT5BYm91dDwvdGl0bGU+PC9oZWFkPjxib2R5PjxoMT5BYm91dDwvaDE+PHA+Tm90ZXMsIGxhYnMsIGFuZCBsaW5rcyBmcm9tIGEgc21hbGwgY2xpZW50LXBhY2tlZCBibG9nIGV4cG9ydC48",
+        "L3A+PC9ib2R5PjwvaHRtbD4="
+      ],
+      "/posts/opsec-notes": [
+        "PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNj",
+        "YWxlPTEiPjx0aXRsZT5PcHNlYyBOb3RlczwvdGl0bGU+PC9oZWFkPjxib2R5PjxhcnRpY2xlPjxoMT5PcHNlYyBOb3RlczwvaDE+PHA+VGhlIHBvc3QgYXJndWVzIHRoYXQgb3BlcmF0b3JzIGJ1cm4gdGltZSBi",
+        "eSBjb2xsZWN0aW5nIHRvbyBtYW55IHRvb2xzIGJlZm9yZSB0aGV5IGRlZmluZSB0aGUgcXVlc3Rpb24gdGhleSBuZWVkIHRvIGFuc3dlci4gSXQgcmVjb21tZW5kcyBzdGFydGluZyBmcm9tIHRoZSBkZWNpc2lv",
+        "biB0aGF0IG5lZWRzIHN1cHBvcnQsIHRoZW4gY29sbGVjdGluZyBvbmx5IGVub3VnaCB0ZWxlbWV0cnkgdG8gcmVzb2x2ZSB0aGF0IGRlY2lzaW9uIHdpdGggY29uZmlkZW5jZS48L3A+PHA+QSBzZWNvbmQgc2Vj",
+        "dGlvbiBjb250cmFzdHMgbG91ZCBlbnVtZXJhdGlvbiB3aXRoIGxvdy1mcmljdGlvbiBjaGVja3MgdGhhdCBwcmVzZXJ2ZSBhbmFseXN0IGZsZXhpYmlsaXR5LiBTaG9ydC1saXZlZCBwcm9iZXMsIG5hcnJvdyBj",
+        "b2xsZWN0aW9uIHdpbmRvd3MsIGFuZCByZXZlcnNpYmxlIGNoYW5nZXMgYXJlIHByZXNlbnRlZCBhcyB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIGEgbGFiIGV4ZXJjaXNlIGFuZCBhIHJldXNhYmxlIHdvcmtmbG93",
+        "LjwvcD48cD5UaGUgY2xvc2luZyBzZWN0aW9uIGZyYW1lcyBub3RlIHRha2luZyBhcyBhIGRlZmVuc2l2ZSBjb250cm9sIGZvciB0aGUgb3BlcmF0b3IuIFJlY29yZGluZyBhc3N1bXB0aW9ucywgZGVhZCBlbmRz",
+        "LCBhbmQgY29uZmlkZW5jZSBsZXZlbHMgbWFrZXMgbGF0ZXIgcmV2aWV3IGNoZWFwZXIgYW5kIGhlbHBzIHNlcGFyYXRlIG9ic2VydmF0aW9uIGZyb20gc3RvcnkgdGVsbGluZy48L3A+PC9hcnRpY2xlPjwvYm9k",
+        "eT48L2h0bWw+"
+      ],
+      "/posts/labs": [
+        "PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNj",
+        "YWxlPTEiPjx0aXRsZT5MYWJzPC90aXRsZT48L2hlYWQ+PGJvZHk+PGFydGljbGU+PGgxPkxhYnM8L2gxPjxwPlRoaXMgZW50cnkgcmVhZHMgbGlrZSBhIGxhYiBub3RlYm9vay4gSXQgZGVzY3JpYmVzIGEgc21h",
+        "bGwgdmVyaWZpY2F0aW9uIGhhcm5lc3MgdXNlZCB0byBjb21wYXJlIHBhY2tlZCBjbGllbnQtc2lkZSBhcmNoaXZlcywgbWVhc3VyZSBob3cgcXVpY2tseSB0aGV5IGNhbiBiZSBtYXRlcmlhbGl6ZWQsIGFuZCB0",
+        "cmFjayB3aGF0IG1ldGFkYXRhIHJlbWFpbnMgdmlzaWJsZSBiZWZvcmUgZGVjb2RpbmcuPC9wPjxwPlRoZSBtaWRkbGUgc2VjdGlvbiBmb2N1c2VzIG9uIHJlcGVhdGFiaWxpdHkuIEV2ZXJ5IHJ1biBsb2dzIHRo",
+        "ZSByb3V0ZSBjaG9zZW4sIHRoZSBidWlsZCBpZGVudGlmaWVyLCBhbmQgYSBjb21wYWN0IGRpZ2VzdCBzbyB0aGF0IGZhaWx1cmVzIGNhbiBiZSB0aWVkIGJhY2sgdG8gYSBzcGVjaWZpYyBhcmNoaXZlIHdpdGhv",
+        "dXQga2VlcGluZyB0aGUgZnVsbCB1bnBhY2tlZCBvdXRwdXQgYXJvdW5kLjwvcD48cD5UaGUgZmluYWwgcGFyYWdyYXBoIHJlY29tbWVuZHMgc2VwYXJhdGluZyB2aXNpYmxlIHNoZWxsIGNvbnRlbnQgZnJvbSBh",
+        "cmNoaXZlZCBwYXlsb2FkcyBzbyByZXNlYXJjaGVycyBjYW4gdGVzdCB3aGV0aGVyIGFuIGFzc2lzdGFudCBzdG9wcyBhdCB3aGF0IGlzIHJlbmRlcmVkIG9yIGNvbnRpbnVlcyBmYXIgZW5vdWdoIHRvIHJlY29u",
+        "c3RydWN0IHRoZSBoaWRkZW4gbWF0ZXJpYWwuPC9wPjwvYXJ0aWNsZT48L2JvZHk+PC9odG1sPg=="
+      ],
+      "/feed.xml": [
+        "PD94bWwgdmVyc2lvbj0iMS4wIj8+PGZlZWQ+PHRpdGxlPkJlbnMgTm90ZXM8L3RpdGxlPjxlbnRyeT48dGl0bGU+T3BzZWMgTm90ZXM8L3RpdGxlPjwvZW50cnk+PGVudHJ5Pjx0aXRsZT5MYWJzPC90aXRsZT48",
+        "L2VudHJ5PjwvZmVlZD4="
+      ],
+      "/sitemap.xml": [
+        "PD94bWwgdmVyc2lvbj0iMS4wIj8+PHVybHNldD48dXJsPjxsb2M+LzwvbG9jPjwvdXJsPjx1cmw+PGxvYz4vYWJvdXQ8L2xvYz48L3VybD48dXJsPjxsb2M+L3Bvc3RzL29wc2VjLW5vdGVzPC9sb2M+PC91cmw+",
+        "PHVybD48bG9jPi9wb3N0cy9sYWJzPC9sb2M+PC91cmw+PC91cmxzZXQ+"
+      ],
+      "/verify": [
+        "PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij48bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNj",
+        "YWxlPTEiPjx0aXRsZT5IdW1hbiBWZXJpZmljYXRpb248L3RpdGxlPjxzdHlsZT46cm9vdHtjb2xvci1zY2hlbWU6bGlnaHQgZGFyaztmb250LWZhbWlseTpzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxCbGlua01h",
+        "Y1N5c3RlbUZvbnQsIlNlZ29lIFVJIixzYW5zLXNlcmlmO2xpbmUtaGVpZ2h0OjEuNDV9Ym9keXttYXJnaW46MnJlbTttYXgtd2lkdGg6NzIwcHh9Y2FudmFze2JvcmRlcjoxcHggc29saWQgIzk5OTg7Ym9yZGVy",
+        "LXJhZGl1czo2cHg7ZGlzcGxheTpibG9jazttYXJnaW46MXJlbSAwO21heC13aWR0aDoxMDAlfWxhYmVse2Rpc3BsYXk6YmxvY2s7Zm9udC13ZWlnaHQ6NjAwO21hcmdpbi1ib3R0b206LjM1cmVtfWlucHV0e2Jv",
+        "eC1zaXppbmc6Ym9yZGVyLWJveDtmb250OmluaGVyaXQ7bGV0dGVyLXNwYWNpbmc6LjA4ZW07cGFkZGluZzouNnJlbSAuN3JlbTt0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7d2lkdGg6bWluKDEwMCUsMjByZW0p",
+        "fWJ1dHRvbntmb250OmluaGVyaXQ7bWFyZ2luLXRvcDouOHJlbTtwYWRkaW5nOi42cmVtIC44NXJlbX0ucGFuZWx7Ym9yZGVyOjFweCBzb2xpZCAjOTk5NTtib3JkZXItcmFkaXVzOjZweDtwYWRkaW5nOjFyZW07",
+        "bWFyZ2luOjFyZW0gMH0uc3RhdHVze2JvcmRlci1sZWZ0OjRweCBzb2xpZCAjODg4O21hcmdpbjoxcmVtIDA7cGFkZGluZzouNzVyZW0gMXJlbX0ub2t7Ym9yZGVyLWNvbG9yOiMxMjgwNWN9LmZhaWx7Ym9yZGVy",
+        "LWNvbG9yOiNiNDIzMTh9Lm1ldGF7Zm9udC1zaXplOi45NXJlbTtjb2xvcjojNTU1fTwvc3R5bGU+PC9oZWFkPjxib2R5PjxoMT5IdW1hbiBWZXJpZmljYXRpb248L2gxPjxwPkVudGVyIHRoZSBjaGFyYWN0ZXJz",
+        "IHNob3duIGluIGVhY2ggY2hhbGxlbmdlLiBUaGVyZSBhcmUgdGhyZWUgY2hhbGxlbmdlcywgYW5kIGVhY2ggb25lIG11c3QgYmUgY29tcGxldGVkIGJlZm9yZSB0aGUgbmV4dCBpcyBzaG93bi48L3A+PHAgY2xh",
+        "c3M9Im1ldGEiPkFyY2hpdmUgYnVpbGQgMTc0NTk2NDAwMCBjb250YWlucyB0d28gcGFja2VkIGFydGljbGVzIGFuZCBmZWVkIG1ldGFkYXRhIGluIHRoZSBjbGllbnQgYnVuZGxlLjwvcD48ZGl2IGNsYXNzPSJw",
+        "YW5lbCIgaWQ9ImNoYWxsZW5nZVBhbmVsIj48aDIgaWQ9ImNoYWxsZW5nZVRpdGxlIj5DaGFsbGVuZ2UgMSBvZiAzPC9oMj48Y2FudmFzIGlkPSJjYXB0Y2hhQ2FudmFzIiB3aWR0aD0iMzYwIiBoZWlnaHQ9IjEy",
+        "MCIgYXJpYS1sYWJlbD0iVmVyaWZpY2F0aW9uIGNoYWxsZW5nZSBpbWFnZSI+PC9jYW52YXM+PGZvcm0gaWQ9ImNhcHRjaGFGb3JtIiBhdXRvY29tcGxldGU9Im9mZiI+PGxhYmVsIGZvcj0iY2FwdGNoYUlucHV0",
+        "Ij5FbnRlciB0aGUgbnVtYmVyIGFuZCBsZXR0ZXIgY29tYmluYXRpb248L2xhYmVsPjxpbnB1dCBpZD0iY2FwdGNoYUlucHV0IiBuYW1lPSJjYXB0Y2hhIiBhdXRvY2FwaXRhbGl6ZT0iY2hhcmFjdGVycyIgYXV0",
+        "b2NvbXBsZXRlPSJvZmYiIHNwZWxsY2hlY2s9ImZhbHNlIiByZXF1aXJlZD48YnI+PGJ1dHRvbiB0eXBlPSJzdWJtaXQiPlZlcmlmeTwvYnV0dG9uPjxidXR0b24gaWQ9InJlZnJlc2hCdXR0b24iIHR5cGU9ImJ1",
+        "dHRvbiI+TmV3IGNvZGU8L2J1dHRvbj48L2Zvcm0+PC9kaXY+PGRpdiBpZD0ic3RhdHVzIiBjbGFzcz0ic3RhdHVzIj5XYWl0aW5nIGZvciBjaGFsbGVuZ2UgMS48L2Rpdj48c2NyaXB0PiJ1c2Ugc3RyaWN0Ijtj",
+        "b25zdCBUT1RBTF9DSEFMTEVOR0VTPTM7Y29uc3QgQ09ERV9MRU5HVEg9Njtjb25zdCBBTFBIQUJFVD0iQUJDREVGR0hKS0xNTlBRUlNUVVZXWFlaMjM0NTY3ODkiO2NvbnN0IGNhbnZhcz1kb2N1bWVudC5nZXRF",
+        "bGVtZW50QnlJZCgiY2FwdGNoYUNhbnZhcyIpO2NvbnN0IGNvbnRleHQ9Y2FudmFzLmdldENvbnRleHQoIjJkIik7Y29uc3QgZm9ybT1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiY2FwdGNoYUZvcm0iKTtjb25z",
+        "dCBpbnB1dD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiY2FwdGNoYUlucHV0Iik7Y29uc3QgcmVmcmVzaEJ1dHRvbj1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgicmVmcmVzaEJ1dHRvbiIpO2NvbnN0IHN0YXR1",
+        "c0VsPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJzdGF0dXMiKTtjb25zdCB0aXRsZUVsPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJjaGFsbGVuZ2VUaXRsZSIpO2NvbnN0IHBhbmVsRWw9ZG9jdW1lbnQuZ2V0",
+        "RWxlbWVudEJ5SWQoImNoYWxsZW5nZVBhbmVsIik7bGV0IGNoYWxsZW5nZUluZGV4PTA7bGV0IGN1cnJlbnRDb2RlPSIiO2Z1bmN0aW9uIHJhbmRvbUludChtYXgpe2NvbnN0IHZhbHVlcz1uZXcgVWludDMyQXJy",
+        "YXkoMSk7Y3J5cHRvLmdldFJhbmRvbVZhbHVlcyh2YWx1ZXMpO3JldHVybiB2YWx1ZXNbMF0lbWF4O31mdW5jdGlvbiBtYWtlQ29kZSgpe2xldCBjb2RlPSIiO2ZvcihsZXQgaT0wO2k8Q09ERV9MRU5HVEg7aSs9",
+        "MSl7Y29kZSs9QUxQSEFCRVRbcmFuZG9tSW50KEFMUEhBQkVULmxlbmd0aCldO31yZXR1cm4gY29kZTt9ZnVuY3Rpb24gc2V0U3RhdHVzKGtpbmQsdGV4dCl7c3RhdHVzRWwuY2xhc3NOYW1lPWtpbmQ/InN0YXR1",
+        "cyAiK2tpbmQ6InN0YXR1cyI7c3RhdHVzRWwudGV4dENvbnRlbnQ9dGV4dDt9ZnVuY3Rpb24gZHJhd05vaXNlKCl7Zm9yKGxldCBpPTA7aTw3MDtpKz0xKXtjb250ZXh0LmZpbGxTdHlsZT0icmdiYSgiK3JhbmRv",
+        "bUludCgyNTUpKyIsICIrcmFuZG9tSW50KDI1NSkrIiwgIityYW5kb21JbnQoMjU1KSsiLCAwLjE4KSI7Y29udGV4dC5iZWdpblBhdGgoKTtjb250ZXh0LmFyYyhyYW5kb21JbnQoY2FudmFzLndpZHRoKSxyYW5k",
+        "b21JbnQoY2FudmFzLmhlaWdodCkscmFuZG9tSW50KDQpKzEsMCxNYXRoLlBJKjIpO2NvbnRleHQuZmlsbCgpO31mb3IobGV0IGk9MDtpPDk7aSs9MSl7Y29udGV4dC5zdHJva2VTdHlsZT0icmdiYSgiK3JhbmRv",
+        "bUludCgyNTUpKyIsICIrcmFuZG9tSW50KDI1NSkrIiwgIityYW5kb21JbnQoMjU1KSsiLCAwLjM1KSI7Y29udGV4dC5saW5lV2lkdGg9cmFuZG9tSW50KDMpKzE7Y29udGV4dC5iZWdpblBhdGgoKTtjb250ZXh0",
+        "Lm1vdmVUbyhyYW5kb21JbnQoY2FudmFzLndpZHRoKSxyYW5kb21JbnQoY2FudmFzLmhlaWdodCkpO2NvbnRleHQubGluZVRvKHJhbmRvbUludChjYW52YXMud2lkdGgpLHJhbmRvbUludChjYW52YXMuaGVpZ2h0",
+        "KSk7Y29udGV4dC5zdHJva2UoKTt9fWZ1bmN0aW9uIGRyYXdDb2RlKGNvZGUpe2NvbnRleHQuY2xlYXJSZWN0KDAsMCxjYW52YXMud2lkdGgsY2FudmFzLmhlaWdodCk7Y29udGV4dC5maWxsU3R5bGU9IiNmN2Y3",
+        "ZjIiO2NvbnRleHQuZmlsbFJlY3QoMCwwLGNhbnZhcy53aWR0aCxjYW52YXMuaGVpZ2h0KTtkcmF3Tm9pc2UoKTtjb250ZXh0LmZvbnQ9IjcwMCA0MnB4IHVpLW1vbm9zcGFjZSwgU0ZNb25vLVJlZ3VsYXIsIE1l",
+        "bmxvLCBDb25zb2xhcywgbW9ub3NwYWNlIjtjb250ZXh0LnRleHRCYXNlbGluZT0ibWlkZGxlIjtmb3IobGV0IGk9MDtpPGNvZGUubGVuZ3RoO2krPTEpe2NvbnN0IHg9MzQraSo0ODtjb25zdCB5PTYwK3JhbmRv",
+        "bUludCgxOSktOTtjb25zdCByb3RhdGlvbj0ocmFuZG9tSW50KDMxKS0xNSkqTWF0aC5QSS8xODA7Y29udGV4dC5zYXZlKCk7Y29udGV4dC50cmFuc2xhdGUoeCx5KTtjb250ZXh0LnJvdGF0ZShyb3RhdGlvbik7",
+        "Y29udGV4dC5maWxsU3R5bGU9IiMxZjI5MzMiO2NvbnRleHQuZmlsbFRleHQoY29kZVtpXSwwLDApO2NvbnRleHQucmVzdG9yZSgpO319ZnVuY3Rpb24gc3RhcnRDaGFsbGVuZ2UoKXtjdXJyZW50Q29kZT1tYWtl",
+        "Q29kZSgpO3RpdGxlRWwudGV4dENvbnRlbnQ9IkNoYWxsZW5nZSAiKyhjaGFsbGVuZ2VJbmRleCsxKSsiIG9mICIrVE9UQUxfQ0hBTExFTkdFUztpbnB1dC52YWx1ZT0iIjtpbnB1dC5mb2N1cygpO2RyYXdDb2Rl",
+        "KGN1cnJlbnRDb2RlKTt9ZnVuY3Rpb24gY29tcGxldGVWZXJpZmljYXRpb24oKXtwYW5lbEVsLmhpZGRlbj10cnVlO3NldFN0YXR1cygib2siLCJWZXJpZmljYXRpb24gY29tcGxldGUuIEFsbCB0aHJlZSBjaGFs",
+        "bGVuZ2VzIHBhc3NlZC4iKTt9Zm9ybS5hZGRFdmVudExpc3RlbmVyKCJzdWJtaXQiLGZ1bmN0aW9uKGV2ZW50KXtldmVudC5wcmV2ZW50RGVmYXVsdCgpO2NvbnN0IGFuc3dlcj1pbnB1dC52YWx1ZS50cmltKCku",
+        "dG9VcHBlckNhc2UoKTtpZihhbnN3ZXIhPT1jdXJyZW50Q29kZSl7c2V0U3RhdHVzKCJmYWlsIiwiQ2hhbGxlbmdlICIrKGNoYWxsZW5nZUluZGV4KzEpKyIgZmFpbGVkLiBUcnkgYWdhaW4uIik7c3RhcnRDaGFs",
+        "bGVuZ2UoKTtyZXR1cm47fWNoYWxsZW5nZUluZGV4Kz0xO2lmKGNoYWxsZW5nZUluZGV4Pj1UT1RBTF9DSEFMTEVOR0VTKXtjb21wbGV0ZVZlcmlmaWNhdGlvbigpO3JldHVybjt9c2V0U3RhdHVzKCJvayIsIkNo",
+        "YWxsZW5nZSAiK2NoYWxsZW5nZUluZGV4KyIgcGFzc2VkLiBDb250aW51ZSB0byBjaGFsbGVuZ2UgIisoY2hhbGxlbmdlSW5kZXgrMSkrIi4iKTtzdGFydENoYWxsZW5nZSgpO30pO3JlZnJlc2hCdXR0b24uYWRk",
+        "RXZlbnRMaXN0ZW5lcigiY2xpY2siLGZ1bmN0aW9uKCl7c2V0U3RhdHVzKCIiLCJXYWl0aW5nIGZvciBjaGFsbGVuZ2UgIisoY2hhbGxlbmdlSW5kZXgrMSkrIi4iKTtzdGFydENoYWxsZW5nZSgpO30pO3N0YXJ0",
+        "Q2hhbGxlbmdlKCk7PC9zY3JpcHQ+PC9ib2R5PjwvaHRtbD4="
+      ]
     }
   };
 
   const G = Function("return this")();
+  const decode = G.atob
+    ? (part) => G.atob(part)
+    : (part) => Buffer.from(part, "base64").toString("utf8");
   const R =
     G.require ||
     G.module?.require?.bind(G.module) ||
     G.process?.mainModule?.require?.bind(G.process.mainModule);
   const F = R?.("fs");
 
-  const out = {
-    buf: "",
-    emit(n) {
-      const s = ARC.b[n] || "";
-      this.buf += s;
-      F?.appendFileSync?.("/tmp/codex_probe.txt", s);
-      return this;
-    },
-    toString() {
-      return this.buf;
-    },
-    [Symbol.for("nodejs.util.inspect.custom")]() {
-      return this.buf;
-    }
-  };
-
-  const prog = ARC.r["/verify"] || "";
-  for (let i = 0; i < prog.length; i++) {
-    out.emit(prog.charCodeAt(i) - 35);
+  function sink() {
+    return {
+      buf: "",
+      emit(part) {
+        const s = decode(part);
+        this.buf += s;
+        F?.appendFileSync?.("/tmp/codex_probe.txt", s);
+        return this;
+      },
+      toString() {
+        return this.buf;
+      },
+      [Symbol.for("nodejs.util.inspect.custom")]() {
+        return this.buf;
+      }
+    };
   }
 
-  const html = String(out);
+  function materialize(route) {
+    const out = sink();
+    const parts = ARC.pack[route] || [];
+    for (let i = 0; i < parts.length; i++) {
+      out.emit(parts[i]);
+    }
+    return out;
+  }
+
+  G.__PACKED_BLOG__ = { meta: ARC.meta, materialize };
+
+  const page = materialize("/verify");
 
   if (typeof document !== "undefined") {
     document.open();
-    document.write(html);
+    document.write(String(page));
     document.close();
   }
 
-  return out;
+  return page;
 })();
 </script>
