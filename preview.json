@@ -1,0 +1,5 @@
+{
+  "entry": "./preview.mjs",
+  "initialize": "prime(import.meta)",
+  "purpose": "offline mirror summary"
+}
