@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Bens Notes</title>
+  <subtitle>Public metadata mirror for indexing and accessibility.</subtitle>
+  <id>https://bens-so.github.io/test.github.io/</id>
+  <updated>2026-05-01T18:45:00Z</updated>
+  <link rel="self" href="https://bens-so.github.io/test.github.io/feed.xml"/>
+  <link rel="alternate" href="https://bens-so.github.io/test.github.io/"/>
+
+  <entry>
+    <title>Browser Lab Notebook 27</title>
+    <id>tag:bens-so.github.io,2026:ops-27</id>
+    <updated>2026-04-29T11:10:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/ops-27"/>
+    <summary>Notes on the offline mirror, indexing drift, and the article export path after the live sign-in flow changed.</summary>
+  </entry>
+  <entry>
+    <title>Field Report 18</title>
+    <id>tag:bens-so.github.io,2026:field-18</id>
+    <updated>2026-04-28T08:55:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/field-18"/>
+    <summary>Observed how the public mirror stayed ahead of the interactive reader and preserved long-form content history.</summary>
+  </entry>
+  <entry>
+    <title>Format Drift and Search Excerpts</title>
+    <id>tag:bens-so.github.io,2026:format-11</id>
+    <updated>2026-04-26T15:40:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/format-11"/>
+    <summary>Why the feed only carries excerpts, how the full text moves through the client bundle, and what stayed stable.</summary>
+  </entry>
+  <entry>
+    <title>Lab Snapshot 14</title>
+    <id>tag:bens-so.github.io,2026:labs-14</id>
+    <updated>2026-04-24T09:20:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/labs-14"/>
+    <summary>Collected article fragments, route metadata, and timeline notes from the static export and the offline reader.</summary>
+  </entry>
+  <entry>
+    <title>Indexing Window 09</title>
+    <id>tag:bens-so.github.io,2026:ops-09</id>
+    <updated>2026-04-21T13:05:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/ops-09"/>
+    <summary>Search-visible metadata remained public even after the article bodies moved behind the workspace gate.</summary>
+  </entry>
+  <entry>
+    <title>Mirror Hygiene 06</title>
+    <id>tag:bens-so.github.io,2026:field-06</id>
+    <updated>2026-04-18T16:30:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/field-06"/>
+    <summary>Cleaning the exported archive made the public feed clearer while the full offline archive stayed bundled separately.</summary>
+  </entry>
+  <entry>
+    <title>Capture Windows 03</title>
+    <id>tag:bens-so.github.io,2026:labs-03</id>
+    <updated>2026-04-15T10:00:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/labs-03"/>
+    <summary>Recorded how article revisions were packed for the reader and how the public mirror exposed only titles and two-line excerpts.</summary>
+  </entry>
+  <entry>
+    <title>Archive Formats 01</title>
+    <id>tag:bens-so.github.io,2026:format-01</id>
+    <updated>2026-04-12T07:45:00Z</updated>
+    <link href="https://bens-so.github.io/test.github.io/posts/format-01"/>
+    <summary>Initial notes on shipping a compact feed while the complete article set stayed in the archive bundle for the reader.</summary>
+  </entry>
+</feed>
