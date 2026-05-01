@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workspace Preview</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    body {
+      margin: 2rem;
+      max-width: 760px;
+    }
+
+    .panel {
+      border: 1px solid #9995;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    input {
+      box-sizing: border-box;
+      font: inherit;
+      padding: 0.6rem 0.7rem;
+      width: min(100%, 24rem);
+    }
+
+    button {
+      font: inherit;
+      margin-top: 0.9rem;
+      padding: 0.6rem 0.9rem;
+    }
+
+    .meta {
+      color: #555;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Workspace Preview</h1>
+  <p>Use your account to continue. A simplified offline mirror is available for accessibility and search indexing.</p>
+
+  <div class="panel">
+    <form>
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username">
+      <label for="pass" style="margin-top:0.9rem">Password</label>
+      <input id="pass" type="password" autocomplete="current-password">
+      <br>
+      <button type="button">Continue</button>
+    </form>
+  </div>
+
+  <p class="meta">Preview assets are client-packed for the offline mirror.</p>
+  <script type="module" src="./assets/app-6f3a9.js"></script>
+</body>
+</html>
