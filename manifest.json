@@ -1,9 +1,0 @@
-{
-  "entry": "./open.mjs",
-  "mode": "client-session",
-  "surface": "shared-memo",
-  "status": "placeholder",
-  "title": "Shared Memo",
-  "summary": "Compact reader for the current memo body with a public abstract and revision details.",
-  "updated": "2026-05-04T09:00:00Z"
-}
